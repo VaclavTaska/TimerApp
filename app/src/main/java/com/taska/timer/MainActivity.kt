@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main2)
         setSupportActionBar(toolbar)
         supportActionBar?.setIcon(R.drawable.ic_timer_white_24dp)
-        supportActionBar?.title = "       Timer App"
+        supportActionBar?.title = "    Timer App"
 
 
         buttonQuickStart.setOnClickListener{

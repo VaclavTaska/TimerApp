@@ -10,9 +10,12 @@
         tools:context=".QuickStartActivity">
 
     <TextView android:id="@+id/textViewRound"
-              android:textSize="20dp"
+              android:textSize="30dp"
               android:text="Rounds"
               android:layout_width="wrap_content"
+              android:textColor="@android:color/white"
+              android:fontFamily="sans-serif-condensed-medium"
+              android:textAppearance="@style/TextAppearance.AppCompat.Display1"
               android:layout_height="wrap_content" android:layout_marginTop="8dp"
               app:layout_constraintTop_toTopOf="parent" android:layout_marginEnd="8dp"
               app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="8dp"
@@ -21,46 +24,57 @@
     <NumberPicker android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:id="@+id/numberPickerRounds"
                   android:layout_marginTop="8dp"
+                  android:theme="@style/NumberPickerTheme"
                   app:layout_constraintTop_toBottomOf="@+id/textViewRound"
                   app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
                   app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"/>
 
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:textSize="20dp"
+              android:textSize="30dp"
               android:text="Round time"
               android:id="@+id/textViewRoundTime"
+              android:textColor="@android:color/white"
               app:layout_constraintTop_toBottomOf="@+id/numberPickerRounds"
+              android:fontFamily="sans-serif-condensed-medium"
+              android:textAppearance="@style/TextAppearance.AppCompat.Display1"
               app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
               app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
               android:layout_marginTop="8dp"/>
 
     <NumberPicker android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:id="@+id/numberPickerRndMinutes"
+                  android:theme="@style/NumberPickerTheme"
                   app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
                   android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/textViewRoundTime"
                   app:layout_constraintEnd_toStartOf="@+id/numberPickerRndSeconds" android:layout_marginEnd="8dp"/>
 
     <NumberPicker android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:id="@+id/numberPickerRestMinutes"
+                  android:theme="@style/NumberPickerTheme"
                   app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
                   android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/textViewRoundRest"
                   app:layout_constraintEnd_toStartOf="@+id/numberPickerRndSeconds" android:layout_marginEnd="8dp"
                   app:layout_constraintHorizontal_bias="0.477"/>
     <NumberPicker android:layout_width="67dp" android:layout_height="181dp"
                   android:id="@+id/numberPickerRndSeconds"
+                  android:theme="@style/NumberPickerTheme"
                   app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
                   app:layout_constraintStart_toEndOf="@+id/numberPickerRndMinutes" android:layout_marginStart="8dp"
                   android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/textViewRoundTime"/>
 
     <NumberPicker android:layout_width="wrap_content" android:layout_height="wrap_content"
                   app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+                  android:theme="@style/NumberPickerTheme"
                   app:layout_constraintStart_toEndOf="@+id/numberPickerRndMinutes" android:layout_marginStart="8dp"
                   android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/textViewRoundRest"
                   app:layout_constraintHorizontal_bias="0.485" android:id="@+id/numberPickerRestSeconds"/>
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:textSize="20dp"
+              android:textSize="30dp"
               android:text="Round rest"
               android:id="@+id/textViewRoundRest"
+              android:fontFamily="sans-serif-condensed-medium"
+              android:textColor="@android:color/white"
+              android:textAppearance="@style/TextAppearance.AppCompat.Display1"
               app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
               app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
               app:layout_constraintHorizontal_bias="0.539" android:layout_marginTop="8dp"

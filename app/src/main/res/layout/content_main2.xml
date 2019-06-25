@@ -49,7 +49,7 @@
             android:fontFamily="sans-serif-condensed-medium"
             android:layout_marginStart="56dp"/>
     <Button
-            android:text="About"
+            android:text="Info"
             android:layout_width="0dp"
             android:layout_height="75dp"
             android:id="@+id/button" android:layout_marginTop="32dp"

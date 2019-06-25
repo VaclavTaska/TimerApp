@@ -11,6 +11,7 @@ import android.os.CountDownTimer
 import android.os.PersistableBundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
+import com.taska.timer.util.PrefUtil
 
 import kotlinx.android.synthetic.main.activity_timer_running.*
 import kotlinx.android.synthetic.main.content_main2.*
@@ -19,12 +20,17 @@ import kotlin.concurrent.thread
 
 class TimerRunning : AppCompatActivity() {
 
+    enum class TimerState {
+        Stopped, Paused, Running
+    }
+
     var timeLeft : Long = 0
     var rounds = SimpleTimer.quickTimer.rounds!!
     var totalRounds = rounds * 2
-    var counterTime : CountDownTimer? = null
     val f : NumberFormat = DecimalFormat("00")
     val timeCountDown : Long = 1000
+    private lateinit var counterTime : CountDownTimer
+    private var timerState = TimerState.Running
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +40,35 @@ class TimerRunning : AppCompatActivity() {
         updateTextOverview("Let's work!")
         playStartSound(R.raw.gamestartcountdown)
         initialPause()
+        updateButtons()
+
+        buttonPlayTime.setOnClickListener {
+            //TODO: Start Timer again
+        }
+
+        buttonPauseTime.setOnClickListener {
+            counterTime.cancel()
+            timerState = TimerState.Paused
+            updateButtons()
+        }
+
+        buttonStopTime.setOnClickListener {
+            counterTime.cancel()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if(timerState == TimerState.Running) {
+            counterTime?.cancel()
+        }
+        //PrefUtil.setPreviousTimerLengthSeconds(this, timeLeft)
+        PrefUtil.setTimerState(this, timerState)
+        PrefUtil.setSecondsRemaining(this, timeLeft)
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 
 
@@ -73,17 +108,6 @@ class TimerRunning : AppCompatActivity() {
             }
         }.start()
         //counterTime.start()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        counterTime?.cancel()
-    }
-
-    fun saveObjectState() {
-        val timeObj = QuickTimerData()
-        timeObj.rounds = rounds
-
     }
 
     private fun initialPause() {
@@ -130,6 +154,26 @@ class TimerRunning : AppCompatActivity() {
     private fun playStartSound(sound : Int) {
         val mp = MediaPlayer.create(this, sound)
         mp.start()
+    }
+
+    private fun updateButtons() {
+        when(timerState){
+            TimerState.Paused -> {
+                buttonStopTime.isEnabled = true
+                buttonPauseTime.isEnabled = false
+                buttonPlayTime.isEnabled = true
+            }
+            TimerState.Running -> {
+                buttonStopTime.isEnabled = true
+                buttonPauseTime.isEnabled = true
+                buttonPlayTime.isEnabled = false
+            }
+            TimerState.Stopped -> {
+                buttonStopTime.isEnabled = false
+                buttonPauseTime.isEnabled = true
+                buttonPlayTime.isEnabled = true
+            }
+        }
     }
 
 }
