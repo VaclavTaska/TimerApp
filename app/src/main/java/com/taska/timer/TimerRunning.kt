@@ -8,15 +8,12 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.PersistableBundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
+import android.view.WindowManager
 import com.taska.timer.util.PrefUtil
 
 import kotlinx.android.synthetic.main.activity_timer_running.*
-import kotlinx.android.synthetic.main.content_main2.*
 import kotlinx.android.synthetic.main.content_timer_running.*
-import kotlin.concurrent.thread
 
 class TimerRunning : AppCompatActivity() {
 
@@ -24,26 +21,37 @@ class TimerRunning : AppCompatActivity() {
         Stopped, Paused, Running
     }
 
-    var timeLeft : Long = 0
-    var rounds = SimpleTimer.quickTimer.rounds!!
-    var totalRounds = rounds * 2
+
     val f : NumberFormat = DecimalFormat("00")
     val timeCountDown : Long = 1000
+    val roundsInit = SimpleTimer.quickTimer.rounds!!
+    val minutesInit = SimpleTimer.quickTimer.roundMin
+    val secondsInit = SimpleTimer.quickTimer.roundSec
+    val minutesRestInit = SimpleTimer.quickTimer.restMin
+    val secondsRestInit = SimpleTimer.quickTimer.restSec
+    var rounds = roundsInit
+    var timeLeft : Long = 0
+    var totalRounds = rounds * 2
+    var initiateBell = false
     private lateinit var counterTime : CountDownTimer
     private var timerState = TimerState.Running
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_timer_running)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setSupportActionBar(toolbar)
         updateRoundText()
         updateTextOverview("Let's work!")
         playStartSound(R.raw.gamestartcountdown)
         initialPause()
         updateButtons()
+        saveInitTimeSetting()
 
         buttonPlayTime.setOnClickListener {
-            //TODO: Start Timer again
+            startTimer(timeLeft)
+            timerState = TimerState.Running
+            updateButtons()
         }
 
         buttonPauseTime.setOnClickListener {
@@ -61,19 +69,26 @@ class TimerRunning : AppCompatActivity() {
         super.onPause()
         if(timerState == TimerState.Running) {
             counterTime?.cancel()
+            timerState = TimerState.Paused
+            updateButtons()
         }
-        //PrefUtil.setPreviousTimerLengthSeconds(this, timeLeft)
+        //PrefUtil.setPreviousTimerSetSeconds(this, timeLeft)
         PrefUtil.setTimerState(this, timerState)
         PrefUtil.setSecondsRemaining(this, timeLeft)
     }
 
     override fun onResume() {
         super.onResume()
+
     }
 
 
-    fun startTimer(time : Long) {
-        playStartSound(R.raw.belldingloud)
+
+    private fun startTimer(time : Long) {
+        if(initiateBell) {
+            playStartSound(R.raw.belldingloud)
+        }
+        initiateBell = false
         counterTime = object : CountDownTimer(time, timeCountDown) {
 
             override fun onTick(millisUntilFinished: Long) {
@@ -107,10 +122,11 @@ class TimerRunning : AppCompatActivity() {
 
             }
         }.start()
-        //counterTime.start()
+
     }
 
     private fun initialPause() {
+        initiateBell = true
         val timeToWait : Long = 3200
         textViewTime.setText("Get Ready!")
         val counterTime = object : CountDownTimer(timeToWait, timeCountDown) {
@@ -121,19 +137,18 @@ class TimerRunning : AppCompatActivity() {
             override fun onFinish() {
                 startTimer(getQuickTime())
             }
-        }
-        counterTime.start()
+        }.start()
     }
 
     private fun getQuickTime() : Long {
-        var roundMinute : Long = (SimpleTimer.quickTimer.roundMin)!!.toLong()
-        var roundSecond : Long = (SimpleTimer.quickTimer.roundSec)!!.toLong()
+        var roundMinute : Long = (minutesInit)!!.toLong()
+        var roundSecond : Long = (secondsInit)!!.toLong()
         return ((roundMinute * 60000) + (roundSecond * 1000))
     }
 
     private fun getQuickRestTime() : Long {
-        var roundMinute : Long = (SimpleTimer.quickTimer.restMin)!!.toLong()
-        var roundSecond : Long = (SimpleTimer.quickTimer.restSec)!!.toLong()
+        var roundMinute : Long = (minutesRestInit)!!.toLong()
+        var roundSecond : Long = (secondsRestInit)!!.toLong()
         return ((roundMinute * 60000) + (roundSecond * 1000))
     }
 
@@ -176,4 +191,11 @@ class TimerRunning : AppCompatActivity() {
         }
     }
 
+    private fun saveInitTimeSetting() {
+        PrefUtil.setPreviousTimerSetRounds(this, roundsInit!!)
+        PrefUtil.setPreviousTimerSetMinutes(this, minutesInit!!)
+        PrefUtil.setPreviousTimerSetSeconds(this, secondsInit!!)
+        PrefUtil.setPreviousTimerSetRestMinutes(this, minutesRestInit!!)
+        PrefUtil.setPreviousTimerSetRestSeconds(this, secondsRestInit!!)
+    }
 }

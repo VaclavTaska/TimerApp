@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
 import android.widget.NumberPicker
+import com.taska.timer.util.PrefUtil
 
 import kotlinx.android.synthetic.main.activity_quick_start.*
 import kotlinx.android.synthetic.main.content_quick_start.*
@@ -27,7 +28,7 @@ class QuickStartActivity : AppCompatActivity() {
         }
     }
 
-    fun initNumberPickers() {
+    private fun initNumberPickers() {
         numberPickerRounds.minValue = 1
         numberPickerRounds.maxValue = 99
         numberPickerRndMinutes.minValue = 0
@@ -39,6 +40,13 @@ class QuickStartActivity : AppCompatActivity() {
         numberPickerRestSeconds.minValue = 0
         numberPickerRestSeconds.maxValue = 59
 
+        numberPickerRounds.value = PrefUtil.getPreviousTimerSetRounds(this)
+        numberPickerRndMinutes.value = PrefUtil.getPreviousTimerSetMinutes(this)
+        numberPickerRndSeconds.value = PrefUtil.getPreviousTimerSetSeconds(this)
+        numberPickerRestMinutes.value = PrefUtil.getPreviousTimerSetRestMinutes(this)
+        numberPickerRestSeconds.value = PrefUtil.getPreviousTimerSetRestSeconds(this)
     }
+
+
 
 }
