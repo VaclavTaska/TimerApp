@@ -60,9 +60,7 @@ class TimerRunning : AppCompatActivity() {
             updateButtons()
         }
 
-        buttonStopTime.setOnClickListener {
-            counterTime.cancel()
-        }
+
     }
 
     override fun onPause() {
@@ -174,17 +172,14 @@ class TimerRunning : AppCompatActivity() {
     private fun updateButtons() {
         when(timerState){
             TimerState.Paused -> {
-                buttonStopTime.isEnabled = true
                 buttonPauseTime.isEnabled = false
                 buttonPlayTime.isEnabled = true
             }
             TimerState.Running -> {
-                buttonStopTime.isEnabled = true
                 buttonPauseTime.isEnabled = true
                 buttonPlayTime.isEnabled = false
             }
             TimerState.Stopped -> {
-                buttonStopTime.isEnabled = false
                 buttonPauseTime.isEnabled = true
                 buttonPlayTime.isEnabled = true
             }
