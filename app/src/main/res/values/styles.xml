@@ -6,6 +6,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">#ffffff</item>
+        <item name="colorControlActivated"></item>
     </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -21,6 +23,12 @@
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:background">@android:color/transparent</item>
         <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="AppTheme.InputTextWhite" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorControlNormal">#c5c5c5</item>
+        <item name="colorControlActivated">@color/colorAccentWhite</item>
+        <item name="colorControlHighlight">@color/colorAccentWhite</item>
     </style>
 
 </resources>

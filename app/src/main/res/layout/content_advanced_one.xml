@@ -15,12 +15,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" app:counterMaxLength="10" android:hint="Name your workout"
                 app:counterEnabled="true" android:textColorHint="@android:color/white"
-        >
+                app:counterTextAppearance="@android:style/TextAppearance.Material.Widget.Button.Colored">
 
             <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text" android:textColor="@android:color/white" android:textSize="24sp"/>
+                    android:inputType="text" android:textColor="@android:color/white" android:textSize="24sp"
+                    android:fontFamily="sans-serif"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView android:id="@+id/textViewRoundAdvOne"
@@ -80,16 +81,19 @@
         <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="32dp">
             <RadioButton
                     android:text="After Exercise"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/radioButton" android:layout_weight="1"
-            />
+                    android:textColor="@android:color/white" android:textSize="16sp"
+                    android:layout_marginStart="45dp"/>
             <RadioButton
                     android:text="After Round"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/radioButton2" android:layout_weight="1"/>
+                    android:layout_height="wrap_content" android:id="@+id/radioButton2" android:layout_weight="1"
+                    android:textColor="@android:color/white" android:textSize="16sp"/>
         </RadioGroup>
         <TextView android:id="@+id/textViewBreakTimeAdvOne"
                   android:textSize="30dp"
@@ -98,7 +102,7 @@
                   android:textColor="@android:color/white"
                   android:fontFamily="sans-serif-condensed-medium"
                   android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                  android:layout_height="wrap_content" android:layout_marginTop="8dp"
+                  android:layout_height="wrap_content" android:layout_marginTop="32dp"
                   app:layout_constraintTop_toTopOf="parent" android:layout_marginEnd="8dp"
                   app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="8dp"
                   app:layout_constraintStart_toStartOf="parent" android:textAlignment="center"/>
