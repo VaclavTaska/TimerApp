@@ -88,12 +88,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/radioButton" android:layout_weight="1"
                     android:textColor="@android:color/white" android:textSize="16sp"
-                    android:layout_marginStart="45dp"/>
+                    android:layout_marginStart="45dp" android:checked="true"
+                    android:buttonTint="@android:color/white"/>
             <RadioButton
                     android:text="After Round"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/radioButton2" android:layout_weight="1"
-                    android:textColor="@android:color/white" android:textSize="16sp"/>
+                    android:textColor="@android:color/white" android:textSize="16sp"
+                    android:buttonTint="@android:color/white"/>
         </RadioGroup>
         <TextView android:id="@+id/textViewBreakTimeAdvOne"
                   android:textSize="30dp"
@@ -128,6 +130,10 @@
                           app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="80dp"
                           android:layout_width="wrap_content"/>
         </LinearLayout>
+        <TextView
+                android:text="TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/textViewTest" android:textSize="24sp"/>
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
