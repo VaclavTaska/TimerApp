@@ -21,18 +21,25 @@ class TimerRunning : AppCompatActivity() {
         Stopped, Paused, Running
     }
 
+    // TODO - Visible custom advanced exercise name.
+    // TODO - Finish second advanced exercise.
 
     val f : NumberFormat = DecimalFormat("00")
     val timeCountDown : Long = 1000
     val roundsInit = SimpleTimer.quickTimer.rounds!!
-    val minutesInit = SimpleTimer.quickTimer.roundMin
-    val secondsInit = SimpleTimer.quickTimer.roundSec
+    val exercisesInit = SimpleTimer.quickTimerExerciseList.size
     val minutesRestInit = SimpleTimer.quickTimer.restMin
     val secondsRestInit = SimpleTimer.quickTimer.restSec
     var rounds = roundsInit
+    var exercises = exercisesInit
+    var exerciseNum = 0
+    var exerciseWithRest = exercisesInit * roundsInit * 2
+    var minutesInit = getCurrentExerciseMinute()
+    var secondsInit = getCurrentExerciseSeconds()
     var timeLeft : Long = 0
     var totalRounds = rounds * 2
     var initiateBell = false
+    var isRestAfterRound = SimpleTimer.isRestAfterRound
     private lateinit var counterTime : CountDownTimer
     private var timerState = TimerState.Running
 
@@ -42,11 +49,12 @@ class TimerRunning : AppCompatActivity() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setSupportActionBar(toolbar)
         updateRoundText()
+        updateExerciseText()
         updateTextOverview("Let's work!")
         playStartSound(R.raw.gamestartcountdown)
         initialPause()
         updateButtons()
-        saveInitTimeSetting()
+        saveInitTimeSetting(SimpleTimer.timerType)
 
         buttonPlayTime.setOnClickListener {
             startTimer(timeLeft)
@@ -75,12 +83,6 @@ class TimerRunning : AppCompatActivity() {
         PrefUtil.setSecondsRemaining(this, timeLeft)
     }
 
-    override fun onResume() {
-        super.onResume()
-
-    }
-
-
 
     private fun startTimer(time : Long) {
         if(initiateBell) {
@@ -100,24 +102,10 @@ class TimerRunning : AppCompatActivity() {
             }
 
             override fun onFinish() {
-                totalRounds -= 1
-                if (totalRounds <= 1) {
-                    //textViewTime.setText("Time ended")
-                    updateTextOverview("Time ended")
-                    playSound()
-                    rounds--
-                    updateRoundText()
+                when(SimpleTimer.isQuickTimer) {
+                    true -> finishOfQuickTimer()
+                    false -> finishOfAdvancedTimer()
                 }
-                else if (totalRounds %2 == 0) {
-                    rounds--
-                    updateRoundText()
-                    updateTextOverview("Let's work!")
-                    startTimer(getQuickTime())
-                } else {
-                    startTimer(getQuickRestTime())
-                    updateTextOverview("Rest now")
-                }
-
             }
         }.start()
 
@@ -138,6 +126,89 @@ class TimerRunning : AppCompatActivity() {
         }.start()
     }
 
+    private fun finishOfQuickTimer() {
+        totalRounds -= 1
+        when {
+            totalRounds <= 1 -> {
+                updateTextOverview("Time ended")
+                playSound()
+                rounds--
+                updateRoundText()
+            }
+            totalRounds % 2 == 0 -> {
+                rounds--
+                updateRoundText()
+                updateTextOverview("Let's work!")
+                startTimer(getQuickTime())
+            }
+            else -> {
+                startTimer(getQuickRestTime())
+                updateTextOverview("Rest now")
+            }
+        }
+    }
+
+    private fun finishOfAdvancedTimer() {
+        exerciseWithRest -= 1
+        when {
+            exerciseNum == exercisesInit -> {
+                if(rounds <= 1) {
+                    updateTextOverview("Time ended")
+                    playSound()
+                    rounds--
+                    updateRoundText()
+                } else {
+                    exerciseNum = 0
+                    rounds--
+                    updateRoundText()
+                    exercises = exercisesInit
+                    updateExerciseText()
+                    startTimer(getQuickRestTime())
+                    updateTextOverview("Rest now")
+                }
+            }
+            isRestAfterRound -> {
+                if(exerciseNum == 0) {
+                    minutesInit = getCurrentExerciseMinute()
+                    secondsInit = getCurrentExerciseSeconds()
+                    updateTextOverview("Let's work!")
+                    updateExerciseText()
+                    startTimer(getQuickTime())
+                } else {
+                    exercises -= 1
+                    minutesInit = getCurrentExerciseMinute()
+                    secondsInit = getCurrentExerciseSeconds()
+                    updateTextOverview("Let's work!")
+                    updateExerciseText()
+                    startTimer(getQuickTime())
+                }
+            }
+            else -> {
+                when {
+                    exerciseWithRest % 2 == 0 && exerciseNum == 0 -> {
+                        minutesInit = getCurrentExerciseMinute()
+                        secondsInit = getCurrentExerciseSeconds()
+                        updateTextOverview("Let's work!")
+                        startTimer(getQuickTime())
+                    }
+                    exerciseWithRest % 2 == 0 -> {
+                        exercises -= 1
+                        minutesInit = getCurrentExerciseMinute()
+                        secondsInit = getCurrentExerciseSeconds()
+                        updateTextOverview("Let's work!")
+                        updateExerciseText()
+                        startTimer(getQuickTime())
+                    }
+                    else -> {
+                        updateTextOverview("Rest now")
+                        startTimer(getQuickRestTime())
+                    }
+                }
+            }
+        }
+    }
+
+
     private fun getQuickTime() : Long {
         var roundMinute : Long = (minutesInit)!!.toLong()
         var roundSecond : Long = (secondsInit)!!.toLong()
@@ -151,7 +222,11 @@ class TimerRunning : AppCompatActivity() {
     }
 
     private fun updateRoundText() {
-        textViewRounds.text = rounds.toString()
+        textViewRounds.text = "Round: ${rounds.toString()}"
+    }
+
+    private fun updateExerciseText() {
+        textViewExercises.text = "Exercises: ${exercises.toString()}"
     }
 
     private fun playSound() {
@@ -186,11 +261,44 @@ class TimerRunning : AppCompatActivity() {
         }
     }
 
-    private fun saveInitTimeSetting() {
-        PrefUtil.setPreviousTimerSetRounds(this, roundsInit!!)
-        PrefUtil.setPreviousTimerSetMinutes(this, minutesInit!!)
-        PrefUtil.setPreviousTimerSetSeconds(this, secondsInit!!)
-        PrefUtil.setPreviousTimerSetRestMinutes(this, minutesRestInit!!)
-        PrefUtil.setPreviousTimerSetRestSeconds(this, secondsRestInit!!)
+    private fun getCurrentExerciseMinute() : Int? {
+        var exerciseMinutes : Int? = 0
+        if(SimpleTimer.quickTimerExerciseList.size <= 1) {
+            exerciseMinutes = SimpleTimer.quickTimerExerciseList[0].roundMin
+        } else {
+            exerciseMinutes = SimpleTimer.quickTimerExerciseList[exerciseNum].roundMin
+            //exerciseNum++
+        }
+        return exerciseMinutes
+    }
+
+    private fun getCurrentExerciseSeconds() : Int? {
+        var exerciseSeconds : Int? = 0
+        if(SimpleTimer.quickTimerExerciseList.size <= 1) {
+            exerciseSeconds = SimpleTimer.quickTimerExerciseList[0].roundSec
+        } else {
+            exerciseSeconds = SimpleTimer.quickTimerExerciseList[exerciseNum].roundSec
+            exerciseNum++
+        }
+        return exerciseSeconds
+    }
+
+    private fun saveInitTimeSetting(timerType : TimerType) {
+        when(timerType) {
+            TimerType.Simple -> {
+                PrefUtil.setPreviousSimpleTimerSetRounds(this, roundsInit!!)
+                PrefUtil.setPreviousSimpleTimerSetMinutes(this, minutesInit!!)
+                PrefUtil.setPreviousSimpleTimerSetSeconds(this, secondsInit!!)
+                PrefUtil.setPreviousSimpleTimerSetRestMinutes(this, minutesRestInit!!)
+                PrefUtil.setPreviousSimpleTimerSetRestSeconds(this, secondsRestInit!!)
+            }
+            TimerType.AdvancedOne -> {
+                writeDataToFile(this, DATA_FILE_NAME_ADV_ONE)
+            }
+            TimerType.AdvancedTwo -> {
+
+            }
+        }
+
     }
 }

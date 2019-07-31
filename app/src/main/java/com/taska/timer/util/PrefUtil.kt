@@ -10,60 +10,65 @@ class PrefUtil {
             return 1
         }
 
-        private const val PREVIOUS_TIMER_SET_ROUNDS_ID = "com.taska.timer.previous_timer_set_rounds"
-        fun getPreviousTimerSetRounds(context: Context) : Int{
+        //#########################
+        // Simple Timer Data
+        //#########################
+        private const val PREVIOUS_SIMPLE_TIMER_SET_ROUNDS_ID = "com.taska.timer.previous_timer_set_rounds"
+        fun getPreviousSimpleTimerSetRounds(context: Context) : Int{
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-            return preferences.getInt(PREVIOUS_TIMER_SET_ROUNDS_ID, 0)
+            return preferences.getInt(PREVIOUS_SIMPLE_TIMER_SET_ROUNDS_ID, 0)
         }
-        fun setPreviousTimerSetRounds(context: Context, rounds : Int) {
+        fun setPreviousSimpleTimerSetRounds(context: Context, rounds : Int) {
             val editor = PreferenceManager.getDefaultSharedPreferences(context).edit()
-            editor.putInt(PREVIOUS_TIMER_SET_ROUNDS_ID, rounds)
+            editor.putInt(PREVIOUS_SIMPLE_TIMER_SET_ROUNDS_ID, rounds)
             editor.apply()
         }
 
-        private const val PREVIOUS_TIMER_SET_SEDONDS_ID = "com.taska.timer.previous_timer_set_seconds"
-        fun getPreviousTimerSetSeconds(context: Context) : Int {
+        private const val PREVIOUS_SIMPLE_TIMER_SET_SEDONDS_ID = "com.taska.timer.previous_timer_set_seconds"
+        fun getPreviousSimpleTimerSetSeconds(context: Context) : Int {
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-            return preferences.getInt(PREVIOUS_TIMER_SET_SEDONDS_ID, 0)
+            return preferences.getInt(PREVIOUS_SIMPLE_TIMER_SET_SEDONDS_ID, 0)
         }
-        fun setPreviousTimerSetSeconds(context: Context, seconds : Int) {
+        fun setPreviousSimpleTimerSetSeconds(context: Context, seconds : Int) {
             val editor = PreferenceManager.getDefaultSharedPreferences(context).edit()
-            editor.putInt(PREVIOUS_TIMER_SET_SEDONDS_ID, seconds)
+            editor.putInt(PREVIOUS_SIMPLE_TIMER_SET_SEDONDS_ID, seconds)
             editor.apply()
         }
 
-        private const val PREVIOUS_TIMER_SET_MINUTES_ID = "com.taska.timer.previous_timer_set_minutes"
-        fun getPreviousTimerSetMinutes(context: Context) : Int {
+        private const val PREVIOUS_SIMPLE_TIMER_SET_MINUTES_ID = "com.taska.timer.previous_timer_set_minutes"
+        fun getPreviousSimpleTimerSetMinutes(context: Context) : Int {
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-            return preferences.getInt(PREVIOUS_TIMER_SET_MINUTES_ID, 0)
+            return preferences.getInt(PREVIOUS_SIMPLE_TIMER_SET_MINUTES_ID, 0)
         }
-        fun setPreviousTimerSetMinutes(context: Context, minutes : Int) {
+        fun setPreviousSimpleTimerSetMinutes(context: Context, minutes : Int) {
             val editor = PreferenceManager.getDefaultSharedPreferences(context).edit()
-            editor.putInt(PREVIOUS_TIMER_SET_MINUTES_ID, minutes)
+            editor.putInt(PREVIOUS_SIMPLE_TIMER_SET_MINUTES_ID, minutes)
             editor.apply()
         }
 
-        private const val PREVIOUS_TIMER_SET_REST_SEDONDS_ID = "com.taska.timer.previous_timer_set_rest_seconds"
-        fun getPreviousTimerSetRestSeconds(context: Context) : Int {
+        private const val PREVIOUS_SIMPLE_TIMER_SET_REST_SEDONDS_ID = "com.taska.timer.previous_timer_set_rest_seconds"
+        fun getPreviousSimpleTimerSetRestSeconds(context: Context) : Int {
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-            return preferences.getInt(PREVIOUS_TIMER_SET_REST_SEDONDS_ID, 0)
+            return preferences.getInt(PREVIOUS_SIMPLE_TIMER_SET_REST_SEDONDS_ID, 0)
         }
-        fun setPreviousTimerSetRestSeconds(context: Context, seconds : Int) {
+        fun setPreviousSimpleTimerSetRestSeconds(context: Context, seconds : Int) {
             val editor = PreferenceManager.getDefaultSharedPreferences(context).edit()
-            editor.putInt(PREVIOUS_TIMER_SET_REST_SEDONDS_ID, seconds)
+            editor.putInt(PREVIOUS_SIMPLE_TIMER_SET_REST_SEDONDS_ID, seconds)
             editor.apply()
         }
 
-        private const val PREVIOUS_TIMER_SET_REST_MINUTES_ID = "com.taska.timer.previous_timer_set_rest_minutes"
-        fun getPreviousTimerSetRestMinutes(context: Context) : Int {
+        private const val PREVIOUS_SIMPLE_TIMER_SET_REST_MINUTES_ID = "com.taska.timer.previous_timer_set_rest_minutes"
+        fun getPreviousSimpleTimerSetRestMinutes(context: Context) : Int {
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-            return preferences.getInt(PREVIOUS_TIMER_SET_REST_MINUTES_ID, 0)
+            return preferences.getInt(PREVIOUS_SIMPLE_TIMER_SET_REST_MINUTES_ID, 0)
         }
-        fun setPreviousTimerSetRestMinutes(context: Context, minutes : Int) {
+        fun setPreviousSimpleTimerSetRestMinutes(context: Context, minutes : Int) {
             val editor = PreferenceManager.getDefaultSharedPreferences(context).edit()
-            editor.putInt(PREVIOUS_TIMER_SET_REST_MINUTES_ID, minutes)
+            editor.putInt(PREVIOUS_SIMPLE_TIMER_SET_REST_MINUTES_ID, minutes)
             editor.apply()
         }
+
+
 
         private const val TIMER_STATE_ID = "com.taska.timer.timer_state"
         fun getTimerState(context: Context) : TimerRunning.TimerState {

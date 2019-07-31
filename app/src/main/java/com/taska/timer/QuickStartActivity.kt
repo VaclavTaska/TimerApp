@@ -2,9 +2,7 @@ package com.taska.timer
 
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity;
-import android.widget.NumberPicker
 import com.taska.timer.util.PrefUtil
 
 import kotlinx.android.synthetic.main.activity_quick_start.*
@@ -19,11 +17,16 @@ class QuickStartActivity : AppCompatActivity() {
         initNumberPickers()
         fab.setOnClickListener { view ->
             val timerStartAct = Intent(this, TimerRunning::class.java)
+            SimpleTimer.quickTimerExerciseList.clear()
+            SimpleTimer.quickTimerExerciseList.add(QuickTimerExercise(1, numberPickerRndMinutes.value, numberPickerRndSeconds.value))
             SimpleTimer.quickTimer.rounds = numberPickerRounds.value
-            SimpleTimer.quickTimer.roundMin = numberPickerRndMinutes.value
-            SimpleTimer.quickTimer.roundSec = numberPickerRndSeconds.value
+            //SimpleTimer.quickTimer.roundMin = numberPickerRndMinutes.value
+            //SimpleTimer.quickTimer.roundSec = numberPickerRndSeconds.value
             SimpleTimer.quickTimer.restMin = numberPickerRestMinutes.value
             SimpleTimer.quickTimer.restSec = numberPickerRestSeconds.value
+            SimpleTimer.isRestAfterRound = true
+            SimpleTimer.isQuickTimer = true
+            SimpleTimer.timerType = TimerType.Simple
             startActivity(timerStartAct)
         }
     }
@@ -40,11 +43,11 @@ class QuickStartActivity : AppCompatActivity() {
         numberPickerRestSeconds.minValue = 0
         numberPickerRestSeconds.maxValue = 59
 
-        numberPickerRounds.value = PrefUtil.getPreviousTimerSetRounds(this)
-        numberPickerRndMinutes.value = PrefUtil.getPreviousTimerSetMinutes(this)
-        numberPickerRndSeconds.value = PrefUtil.getPreviousTimerSetSeconds(this)
-        numberPickerRestMinutes.value = PrefUtil.getPreviousTimerSetRestMinutes(this)
-        numberPickerRestSeconds.value = PrefUtil.getPreviousTimerSetRestSeconds(this)
+        numberPickerRounds.value = PrefUtil.getPreviousSimpleTimerSetRounds(this)
+        numberPickerRndMinutes.value = PrefUtil.getPreviousSimpleTimerSetMinutes(this)
+        numberPickerRndSeconds.value = PrefUtil.getPreviousSimpleTimerSetSeconds(this)
+        numberPickerRestMinutes.value = PrefUtil.getPreviousSimpleTimerSetRestMinutes(this)
+        numberPickerRestSeconds.value = PrefUtil.getPreviousSimpleTimerSetRestSeconds(this)
     }
 
 

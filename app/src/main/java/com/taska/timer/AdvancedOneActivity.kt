@@ -1,6 +1,7 @@
 package com.taska.timer
 
 import android.app.ActionBar
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
@@ -27,13 +28,22 @@ class AdvancedOneActivity : AppCompatActivity() {
         setContentView(R.layout.activity_advanced_one)
         setSupportActionBar(toolbar)
         initNumberPickers()
+
+        updateExercisePickers(numberPickerExercisesAdvOne.value)
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            val timerStartActivity = Intent(this, TimerRunning::class.java)
+            SimpleTimer.quickTimerExerciseList.clear()
+            prepareExerciseList()
+            SimpleTimer.quickTimer.rounds = numberPickerRoundsAdvOne.value
+            SimpleTimer.quickTimer.restMin = numberPickerBreakMinutesAdvOne.value
+            SimpleTimer.quickTimer.restSec = numberPickerBreakSecondsAdvOne.value
+            SimpleTimer.isRestAfterRound = whenRestWillHappens()
+            SimpleTimer.isQuickTimer = false
+            SimpleTimer.timerType = TimerType.AdvancedOne
+            startActivity(timerStartActivity)
         }
 
         numberPickerExercisesAdvOne.setOnValueChangedListener{ picker, oldVal, newVal ->
-            textViewTest.text = "Exercise value is $newVal"
             updateExercisePickers(newVal)
         }
     }
@@ -101,22 +111,53 @@ class AdvancedOneActivity : AppCompatActivity() {
         return dPick
     }
 
-    fun View.setMargins(
-        left: Int? = null,
-        top: Int? = null,
-        right: Int? = null,
-        bottom: Int? = null
-    ) {
-        val lp = layoutParams as? ViewGroup.MarginLayoutParams
-            ?: return
+    private fun prepareExerciseList() {
+        var exerciseNumber = 1
+        for(i in listDynamicObj) {
+            if(i is LinearLayout && i !is NumberPicker) {
+                var pickMin: NumberPicker = i.getChildAt(0) as NumberPicker
+                var pickSec: NumberPicker = i.getChildAt(1) as NumberPicker
+                SimpleTimer.quickTimerExerciseList.add(QuickTimerExercise(exerciseNumber, pickMin.value, pickSec.value))
+                exerciseNumber++
+            }
+        }
+    }
 
+    private fun whenRestWillHappens() : Boolean {
+        var whichButtonChecked = true
+        when {
+            radioButtonAfterExercise.isChecked -> whichButtonChecked = false
+            radioButtonAfterRound.isChecked -> whichButtonChecked = true
+        }
+        return whichButtonChecked
+    }
+
+    /**
+     * Reading data from internal storage and sets pickers with values (only if data file exists).
+     */
+    private fun readFromList(){
+        if(readDataFromFile(this, DATA_FILE_NAME_ADV_ONE)) {
+            numberPickerRoundsAdvOne.value = SimpleTimer.quickTimer.rounds!!
+            numberPickerBreakMinutesAdvOne.value = SimpleTimer.quickTimer.restMin!!
+            numberPickerBreakSecondsAdvOne.value = SimpleTimer.quickTimer.restSec!!
+            when(SimpleTimer.isRestAfterRound){
+                true -> radioButtonAfterRound.isChecked = true
+                false -> radioButtonAfterExercise.isChecked = true
+            }
+            // TODO - creating dynamic picker with proper values.
+        }
+    }
+
+
+    // Helper function for setting Margin.
+    fun View.setMargins(left: Int? = null, top: Int? = null, right: Int? = null, bottom: Int? = null) {
+        val lp = layoutParams as? ViewGroup.MarginLayoutParams ?: return
         lp.setMargins(
             left ?: lp.leftMargin,
             top ?: lp.topMargin,
             right ?: lp.rightMargin,
             bottom ?: lp.rightMargin
         )
-
         layoutParams = lp
     }
 
