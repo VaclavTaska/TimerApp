@@ -1,5 +1,6 @@
 package com.taska.timer
 
+import android.content.Context
 import android.icu.text.DecimalFormat
 import android.icu.text.NumberFormat
 import android.media.MediaPlayer
@@ -14,6 +15,10 @@ import com.taska.timer.util.PrefUtil
 
 import kotlinx.android.synthetic.main.activity_timer_running.*
 import kotlinx.android.synthetic.main.content_timer_running.*
+import kotlinx.serialization.ImplicitReflectionSerializer
+import java.io.File
+import java.io.FileOutputStream
+import java.io.ObjectOutputStream
 
 class TimerRunning : AppCompatActivity() {
 
@@ -27,7 +32,7 @@ class TimerRunning : AppCompatActivity() {
     val f : NumberFormat = DecimalFormat("00")
     val timeCountDown : Long = 1000
     val roundsInit = SimpleTimer.quickTimer.rounds!!
-    val exercisesInit = SimpleTimer.quickTimerExerciseList.size
+    val exercisesInit = SimpleTimer.quickTimer.quickTimerExerciseList.size
     val minutesRestInit = SimpleTimer.quickTimer.restMin
     val secondsRestInit = SimpleTimer.quickTimer.restSec
     var rounds = roundsInit
@@ -39,12 +44,14 @@ class TimerRunning : AppCompatActivity() {
     var timeLeft : Long = 0
     var totalRounds = rounds * 2
     var initiateBell = false
-    var isRestAfterRound = SimpleTimer.isRestAfterRound
+    var isRestAfterRound = SimpleTimer.quickTimer.isRestAfterRound!!
     private lateinit var counterTime : CountDownTimer
     private var timerState = TimerState.Running
 
+    @ImplicitReflectionSerializer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        saveInitTimeSetting(SimpleTimer.timerType)
         setContentView(R.layout.activity_timer_running)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setSupportActionBar(toolbar)
@@ -54,7 +61,8 @@ class TimerRunning : AppCompatActivity() {
         playStartSound(R.raw.gamestartcountdown)
         initialPause()
         updateButtons()
-        saveInitTimeSetting(SimpleTimer.timerType)
+        // TODO - java.lang.RuntimeException: Unable to start activity ComponentInfo{com.taska.timer/com.taska.timer.TimerRunning}: java.io.FileNotFoundException: dataFileAdvOne (Read-only file system)
+
 
         buttonPlayTime.setOnClickListener {
             startTimer(timeLeft)
@@ -263,10 +271,10 @@ class TimerRunning : AppCompatActivity() {
 
     private fun getCurrentExerciseMinute() : Int? {
         var exerciseMinutes : Int? = 0
-        if(SimpleTimer.quickTimerExerciseList.size <= 1) {
-            exerciseMinutes = SimpleTimer.quickTimerExerciseList[0].roundMin
+        if(SimpleTimer.quickTimer.quickTimerExerciseList.size <= 1) {
+            exerciseMinutes = SimpleTimer.quickTimer.quickTimerExerciseList[0].roundMin
         } else {
-            exerciseMinutes = SimpleTimer.quickTimerExerciseList[exerciseNum].roundMin
+            exerciseMinutes = SimpleTimer.quickTimer.quickTimerExerciseList[exerciseNum].roundMin
             //exerciseNum++
         }
         return exerciseMinutes
@@ -274,15 +282,16 @@ class TimerRunning : AppCompatActivity() {
 
     private fun getCurrentExerciseSeconds() : Int? {
         var exerciseSeconds : Int? = 0
-        if(SimpleTimer.quickTimerExerciseList.size <= 1) {
-            exerciseSeconds = SimpleTimer.quickTimerExerciseList[0].roundSec
+        if(SimpleTimer.quickTimer.quickTimerExerciseList.size <= 1) {
+            exerciseSeconds = SimpleTimer.quickTimer.quickTimerExerciseList[0].roundSec
         } else {
-            exerciseSeconds = SimpleTimer.quickTimerExerciseList[exerciseNum].roundSec
+            exerciseSeconds = SimpleTimer.quickTimer.quickTimerExerciseList[exerciseNum].roundSec
             exerciseNum++
         }
         return exerciseSeconds
     }
 
+    @ImplicitReflectionSerializer
     private fun saveInitTimeSetting(timerType : TimerType) {
         when(timerType) {
             TimerType.Simple -> {
@@ -301,4 +310,10 @@ class TimerRunning : AppCompatActivity() {
         }
 
     }
+
+    /*fun writeDataToFile(context: Context, filename : String){
+        val file = File(context.filesDir, filename)
+        ObjectOutputStream(FileOutputStream(file)).use { it -> it.writeObject(SimpleTimer) }
+
+    }*/
 }

@@ -17,14 +17,14 @@ class QuickStartActivity : AppCompatActivity() {
         initNumberPickers()
         fab.setOnClickListener { view ->
             val timerStartAct = Intent(this, TimerRunning::class.java)
-            SimpleTimer.quickTimerExerciseList.clear()
-            SimpleTimer.quickTimerExerciseList.add(QuickTimerExercise(1, numberPickerRndMinutes.value, numberPickerRndSeconds.value))
+            SimpleTimer.quickTimer.quickTimerExerciseList.clear()
+            SimpleTimer.quickTimer.quickTimerExerciseList.add(QuickTimerExercise(1, numberPickerRndMinutes.value, numberPickerRndSeconds.value))
             SimpleTimer.quickTimer.rounds = numberPickerRounds.value
             //SimpleTimer.quickTimer.roundMin = numberPickerRndMinutes.value
             //SimpleTimer.quickTimer.roundSec = numberPickerRndSeconds.value
             SimpleTimer.quickTimer.restMin = numberPickerRestMinutes.value
             SimpleTimer.quickTimer.restSec = numberPickerRestSeconds.value
-            SimpleTimer.isRestAfterRound = true
+            SimpleTimer.quickTimer.isRestAfterRound = true
             SimpleTimer.isQuickTimer = true
             SimpleTimer.timerType = TimerType.Simple
             startActivity(timerStartAct)

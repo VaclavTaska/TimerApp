@@ -23,28 +23,31 @@ class AdvancedOneActivity : AppCompatActivity() {
 
     var listDynamicObj = ArrayList<Any>()
 
+    @ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_advanced_one)
         setSupportActionBar(toolbar)
         initNumberPickers()
-
-        updateExercisePickers(numberPickerExercisesAdvOne.value)
+        if(!readFromList()) {
+            updateExercisePickers(numberPickerExercisesAdvOne.value, false)
+        }
+        readFromList()
         fab.setOnClickListener { view ->
             val timerStartActivity = Intent(this, TimerRunning::class.java)
-            SimpleTimer.quickTimerExerciseList.clear()
+            SimpleTimer.quickTimer.quickTimerExerciseList.clear()
             prepareExerciseList()
             SimpleTimer.quickTimer.rounds = numberPickerRoundsAdvOne.value
             SimpleTimer.quickTimer.restMin = numberPickerBreakMinutesAdvOne.value
             SimpleTimer.quickTimer.restSec = numberPickerBreakSecondsAdvOne.value
-            SimpleTimer.isRestAfterRound = whenRestWillHappens()
+            SimpleTimer.quickTimer.isRestAfterRound = whenRestWillHappens()
             SimpleTimer.isQuickTimer = false
             SimpleTimer.timerType = TimerType.AdvancedOne
             startActivity(timerStartActivity)
         }
 
         numberPickerExercisesAdvOne.setOnValueChangedListener{ picker, oldVal, newVal ->
-            updateExercisePickers(newVal)
+            updateExercisePickers(newVal, false)
         }
     }
 
@@ -59,13 +62,14 @@ class AdvancedOneActivity : AppCompatActivity() {
         numberPickerBreakSecondsAdvOne.maxValue = 59
     }
 
-    private fun updateExercisePickers(pickerNumb : Int) {
+    private fun updateExercisePickers(pickerNumb : Int, isReadingDataFile: Boolean) {
         removeOldExercisePickers()
+        numberPickerExercisesAdvOne.value = pickerNumb
         for(i in 1..pickerNumb) {
             val dynamicText = initDynamicText(i)
             val dynamicHorLayout = LinearLayout(ContextThemeWrapper(this, R.style.DynamicLinearLayoutTheme))
-            val dynamicMinPicker = initDynamicPicker(true)
-            val dynamicSecPicker = initDynamicPicker(false)
+            val dynamicMinPicker = initDynamicPicker(true, isReadingDataFile, i)
+            val dynamicSecPicker = initDynamicPicker(false, isReadingDataFile, i)
             sss.addView(dynamicText)
             sss.addView(dynamicHorLayout)
             dynamicHorLayout.addView(dynamicMinPicker)
@@ -99,7 +103,15 @@ class AdvancedOneActivity : AppCompatActivity() {
         return dText
     }
 
-    private fun initDynamicPicker(isPickerForMinutes : Boolean) : NumberPicker{
+    /**
+     * Initializing dynamic picker.
+     * Boolean parameter [isPickerForMinutes] sets picker for minutes with true value and seconds picker with false.
+     * Boolean parameter [isReadingDataFile] if true picker will have value from saved exercise list.
+     * Integer parameter [position] is position from saved exercise list.
+     * @return Number Picker.
+     */
+    private fun initDynamicPicker(isPickerForMinutes : Boolean, isReadingDataFile : Boolean, position : Int) : NumberPicker{
+        var pos = position - 1
         var dPick = NumberPicker(ContextThemeWrapper(this, R.style.NumberPickerTheme))
         if(isPickerForMinutes){
             dPick.maxValue = 60
@@ -107,6 +119,12 @@ class AdvancedOneActivity : AppCompatActivity() {
         } else {
             dPick.maxValue = 59
             dPick.minValue = 0
+        }
+        if(isReadingDataFile) {
+            when(isPickerForMinutes){
+                true -> dPick.value = SimpleTimer.quickTimer.quickTimerExerciseList[pos].roundMin!!
+                false -> dPick.value = SimpleTimer.quickTimer.quickTimerExerciseList[pos].roundSec!!
+            }
         }
         return dPick
     }
@@ -117,7 +135,7 @@ class AdvancedOneActivity : AppCompatActivity() {
             if(i is LinearLayout && i !is NumberPicker) {
                 var pickMin: NumberPicker = i.getChildAt(0) as NumberPicker
                 var pickSec: NumberPicker = i.getChildAt(1) as NumberPicker
-                SimpleTimer.quickTimerExerciseList.add(QuickTimerExercise(exerciseNumber, pickMin.value, pickSec.value))
+                SimpleTimer.quickTimer.quickTimerExerciseList.add(QuickTimerExercise(exerciseNumber, pickMin.value, pickSec.value))
                 exerciseNumber++
             }
         }
@@ -135,16 +153,21 @@ class AdvancedOneActivity : AppCompatActivity() {
     /**
      * Reading data from internal storage and sets pickers with values (only if data file exists).
      */
-    private fun readFromList(){
+    @ExperimentalStdlibApi
+    private fun readFromList() : Boolean {
         if(readDataFromFile(this, DATA_FILE_NAME_ADV_ONE)) {
             numberPickerRoundsAdvOne.value = SimpleTimer.quickTimer.rounds!!
             numberPickerBreakMinutesAdvOne.value = SimpleTimer.quickTimer.restMin!!
             numberPickerBreakSecondsAdvOne.value = SimpleTimer.quickTimer.restSec!!
-            when(SimpleTimer.isRestAfterRound){
+            when(SimpleTimer.quickTimer.isRestAfterRound){
                 true -> radioButtonAfterRound.isChecked = true
                 false -> radioButtonAfterExercise.isChecked = true
             }
             // TODO - creating dynamic picker with proper values.
+            updateExercisePickers(SimpleTimer.quickTimer.quickTimerExerciseList.size, true)
+            return true
+        } else {
+            return false
         }
     }
 
