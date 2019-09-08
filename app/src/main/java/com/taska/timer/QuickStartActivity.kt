@@ -15,6 +15,7 @@ class QuickStartActivity : AppCompatActivity() {
         setContentView(R.layout.activity_quick_start)
         setSupportActionBar(toolbar)
         initNumberPickers()
+        supportActionBar?.title = "Quick Timer setup"
         fab.setOnClickListener { view ->
             val timerStartAct = Intent(this, TimerRunning::class.java)
             SimpleTimer.quickTimer.quickTimerExerciseList.clear()

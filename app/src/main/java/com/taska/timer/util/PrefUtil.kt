@@ -11,6 +11,32 @@ class PrefUtil {
         }
 
         //#########################
+        // Main menu data
+        //#########################
+        private const val ADVANCED_ONE_EXERCICE_NAME = "com.taska.timer.advanced_one_exercise_name"
+        fun getAdvancedExerciseOneName(context: Context) : String {
+            val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+            return preferences.getString(ADVANCED_ONE_EXERCICE_NAME, "Your custom exercise")
+        }
+        fun setAdvancedExerciseOneName(context: Context, name: String){
+            val editor = PreferenceManager.getDefaultSharedPreferences(context).edit()
+            editor.putString(ADVANCED_ONE_EXERCICE_NAME, name)
+            editor.apply()
+        }
+
+        private const val ADVANCED_TWO_EXERCICE_NAME = "com.taska.timer.advanced_two_exercise_name"
+        fun getAdvancedExerciseTwoName(context: Context) : String {
+            val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+            return preferences.getString(ADVANCED_TWO_EXERCICE_NAME, "Your custom exercise")
+        }
+        fun setAdvancedExerciseTwoName(context: Context, name: String){
+            val editor = PreferenceManager.getDefaultSharedPreferences(context).edit()
+            editor.putString(ADVANCED_TWO_EXERCICE_NAME, name)
+            editor.apply()
+        }
+
+
+        //#########################
         // Simple Timer Data
         //#########################
         private const val PREVIOUS_SIMPLE_TIMER_SET_ROUNDS_ID = "com.taska.timer.previous_timer_set_rounds"

@@ -39,7 +39,6 @@ object SimpleTimer {
     //var timerName = "Advanced"
 }
 
-// TODO - Create file Writer
 @ImplicitReflectionSerializer
 fun writeDataToFile(context: Context, filename : String){
     //val file = File(context.filesDir, filename)
@@ -51,7 +50,6 @@ fun writeDataToFile(context: Context, filename : String){
     //file.writeText(dToWrite)
 }
 
-// TODO - Create File Reader
 @ExperimentalStdlibApi
 fun readDataFromFile(context: Context, filename: String) : Boolean  {
     val file = File(context.filesDir, filename)

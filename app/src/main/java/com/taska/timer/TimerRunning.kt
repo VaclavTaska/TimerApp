@@ -1,6 +1,7 @@
 package com.taska.timer
 
 import android.content.Context
+import android.content.res.AssetFileDescriptor
 import android.icu.text.DecimalFormat
 import android.icu.text.NumberFormat
 import android.media.MediaPlayer
@@ -11,6 +12,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.WindowManager
+import androidx.annotation.RawRes
 import com.taska.timer.util.PrefUtil
 
 import kotlinx.android.synthetic.main.activity_timer_running.*
@@ -26,8 +28,8 @@ class TimerRunning : AppCompatActivity() {
         Stopped, Paused, Running
     }
 
-    // TODO - Visible custom advanced exercise name.
     // TODO - Finish second advanced exercise.
+    // TODO - complete Info Button
 
     val f : NumberFormat = DecimalFormat("00")
     val timeCountDown : Long = 1000
@@ -47,6 +49,10 @@ class TimerRunning : AppCompatActivity() {
     var isRestAfterRound = SimpleTimer.quickTimer.isRestAfterRound!!
     private lateinit var counterTime : CountDownTimer
     private var timerState = TimerState.Running
+    private val mediaPlayer = MediaPlayer().apply {
+        setOnPreparedListener{ start() }
+        setOnCompletionListener { reset() }
+    }
 
     @ImplicitReflectionSerializer
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,13 +61,13 @@ class TimerRunning : AppCompatActivity() {
         setContentView(R.layout.activity_timer_running)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setSupportActionBar(toolbar)
+        supportActionBar?.title = "Timer Running"
         updateRoundText()
         updateExerciseText()
         updateTextOverview("Let's work!")
-        playStartSound(R.raw.gamestartcountdown)
+        playSound(R.raw.gamestartcountdown)
         initialPause()
         updateButtons()
-        // TODO - java.lang.RuntimeException: Unable to start activity ComponentInfo{com.taska.timer/com.taska.timer.TimerRunning}: java.io.FileNotFoundException: dataFileAdvOne (Read-only file system)
 
 
         buttonPlayTime.setOnClickListener {
@@ -94,7 +100,7 @@ class TimerRunning : AppCompatActivity() {
 
     private fun startTimer(time : Long) {
         if(initiateBell) {
-            playStartSound(R.raw.belldingloud)
+            playSound(R.raw.belldingloud)
         }
         initiateBell = false
         counterTime = object : CountDownTimer(time, timeCountDown) {
@@ -105,7 +111,7 @@ class TimerRunning : AppCompatActivity() {
                 val seconds : Int = ((timeLeft / timeCountDown) % 60).toInt()
                 textViewTime.setText(f.format(minutes) + ":" + f.format(seconds))
                 if(timeLeft <= 4000) {
-                    playStartSound(R.raw.ticksound)
+                    playSound(R.raw.ticksound)
                 }
             }
 
@@ -247,10 +253,23 @@ class TimerRunning : AppCompatActivity() {
         textViewOverview.text = text
     }
 
-    private fun playStartSound(sound : Int) {
-        val mp = MediaPlayer.create(this, sound)
-        mp.start()
+    // Method for playing sound
+    fun playSound(@RawRes rawResId : Int) {
+        val assetFileDescriptor : AssetFileDescriptor = this.resources.openRawResourceFd(rawResId) ?: return
+        mediaPlayer.run {
+            reset()
+            setDataSource(assetFileDescriptor.fileDescriptor, assetFileDescriptor.startOffset,
+                assetFileDescriptor.declaredLength)
+            prepareAsync()
+        }
     }
+
+    /*
+    private fun playStartSound(sound : Int) {
+        mp.
+        mp.start()
+        mp.release()
+    }*/
 
     private fun updateButtons() {
         when(timerState){
@@ -305,7 +324,7 @@ class TimerRunning : AppCompatActivity() {
                 writeDataToFile(this, DATA_FILE_NAME_ADV_ONE)
             }
             TimerType.AdvancedTwo -> {
-
+                writeDataToFile(this, DATA_FILE_NAME_ADV_TWO)
             }
         }
 

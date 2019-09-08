@@ -4,10 +4,10 @@
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:showIn="@layout/activity_advanced_one"
+        tools:showIn="@layout/activity_advanced_two"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".AdvancedOneActivity">
+        tools:context=".AdvancedTwoActivity">
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/sss" android:orientation="vertical">
@@ -19,13 +19,13 @@
 
             <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
-                    android:id="@+id/nameRoundsAdvOne"
+                    android:id="@+id/nameRoundsAdvTwo"
                     android:layout_height="wrap_content"
                     android:inputType="text" android:textColor="@android:color/white" android:textSize="24sp"
                     android:fontFamily="sans-serif"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView android:id="@+id/textViewRoundAdvOne"
+        <TextView android:id="@+id/textViewRoundAdvTwo"
                   android:textSize="30dp"
                   android:text="Rounds"
                   android:layout_width="match_parent"
@@ -38,7 +38,7 @@
                   app:layout_constraintStart_toStartOf="parent" android:textAlignment="center"/>
 
         <NumberPicker android:layout_height="wrap_content"
-                      android:id="@+id/numberPickerRoundsAdvOne"
+                      android:id="@+id/numberPickerRoundsAdvTwo"
                       android:layout_marginTop="8dp"
                       android:theme="@style/NumberPickerTheme"
                       app:layout_constraintTop_toBottomOf="@+id/textViewRound"
@@ -46,7 +46,7 @@
                       app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="160dp"
                       android:layout_width="match_parent"/>
 
-        <TextView android:id="@+id/textViewExercisesAdvOne"
+        <TextView android:id="@+id/textViewExercisesAdvTwo"
                   android:textSize="30dp"
                   android:text="Exercises"
                   android:layout_width="match_parent"
@@ -59,7 +59,7 @@
                   app:layout_constraintStart_toStartOf="parent" android:textAlignment="center"/>
 
         <NumberPicker android:layout_height="wrap_content"
-                      android:id="@+id/numberPickerExercisesAdvOne"
+                      android:id="@+id/numberPickerExercisesAdvTwo"
                       android:layout_marginTop="8dp"
                       android:theme="@style/NumberPickerTheme"
                       app:layout_constraintTop_toBottomOf="@+id/textViewRound"
@@ -67,7 +67,7 @@
                       app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="160dp"
                       android:layout_width="match_parent"/>
 
-        <TextView android:id="@+id/textViewBreakAdvOne"
+        <TextView android:id="@+id/textViewBreakAdvTwo"
                   android:textSize="30dp"
                   android:text="Break"
                   android:layout_width="match_parent"
@@ -100,7 +100,7 @@
                     android:textColor="@android:color/white" android:textSize="16sp"
                     android:buttonTint="@android:color/white"/>
         </RadioGroup>
-        <TextView android:id="@+id/textViewBreakTimeAdvOne"
+        <TextView android:id="@+id/textViewBreakTimeAdvTwo"
                   android:textSize="30dp"
                   android:text="Break Time"
                   android:layout_width="match_parent"
@@ -112,12 +112,12 @@
                   app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="8dp"
                   app:layout_constraintStart_toStartOf="parent" android:textAlignment="center"/>
 
-        exce<LinearLayout
+        <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
             <NumberPicker android:layout_height="wrap_content"
-                          android:id="@+id/numberPickerBreakMinutesAdvOne"
+                          android:id="@+id/numberPickerBreakMinutesAdvTwo"
                           android:layout_marginTop="8dp"
                           android:theme="@style/NumberPickerTheme"
                           app:layout_constraintTop_toBottomOf="@+id/textViewRound"
@@ -125,7 +125,7 @@
                           app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="80dp"
                           android:layout_width="wrap_content"/>
             <NumberPicker android:layout_height="wrap_content"
-                          android:id="@+id/numberPickerBreakSecondsAdvOne"
+                          android:id="@+id/numberPickerBreakSecondsAdvTwo"
                           android:layout_marginTop="8dp"
                           android:theme="@style/NumberPickerTheme"
                           app:layout_constraintTop_toBottomOf="@+id/textViewRound"

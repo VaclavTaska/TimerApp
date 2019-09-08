@@ -15,24 +15,27 @@ import android.widget.TextView
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import com.taska.timer.util.PrefUtil
-import kotlinx.android.synthetic.main.activity_advanced_one.*
-import kotlinx.android.synthetic.main.content_advanced_one.*
+import kotlinx.android.synthetic.main.activity_advanced_two.*
+import kotlinx.android.synthetic.main.content_advanced_two.*
+import kotlinx.android.synthetic.main.content_advanced_two.radioButtonAfterExercise
+import kotlinx.android.synthetic.main.content_advanced_two.radioButtonAfterRound
+import kotlinx.android.synthetic.main.content_advanced_two.sss
 import java.util.*
 import kotlin.collections.ArrayList
 
-class AdvancedOneActivity : AppCompatActivity() {
+class AdvancedTwoActivity : AppCompatActivity() {
 
     var listDynamicObj = ArrayList<Any>()
 
     @ExperimentalStdlibApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_advanced_one)
+        setContentView(R.layout.activity_advanced_two)
         setSupportActionBar(toolbar)
         initNumberPickers()
-        supportActionBar?.title = PrefUtil.getAdvancedExerciseOneName(this)
+        supportActionBar?.title = PrefUtil.getAdvancedExerciseTwoName(this)
         if(!readFromList()) {
-            updateExercisePickers(numberPickerExercisesAdvOne.value, false)
+            updateExercisePickers(numberPickerExercisesAdvTwo.value, false)
         }
         readExerciseName()
         readFromList()
@@ -40,35 +43,37 @@ class AdvancedOneActivity : AppCompatActivity() {
             val timerStartActivity = Intent(this, TimerRunning::class.java)
             SimpleTimer.quickTimer.quickTimerExerciseList.clear()
             prepareExerciseList()
-            SimpleTimer.quickTimer.rounds = numberPickerRoundsAdvOne.value
-            SimpleTimer.quickTimer.restMin = numberPickerBreakMinutesAdvOne.value
-            SimpleTimer.quickTimer.restSec = numberPickerBreakSecondsAdvOne.value
+            SimpleTimer.quickTimer.rounds = numberPickerRoundsAdvTwo.value
+            SimpleTimer.quickTimer.restMin = numberPickerBreakMinutesAdvTwo.value
+            SimpleTimer.quickTimer.restSec = numberPickerBreakSecondsAdvTwo.value
             SimpleTimer.quickTimer.isRestAfterRound = whenRestWillHappens()
             SimpleTimer.isQuickTimer = false
-            SimpleTimer.timerType = TimerType.AdvancedOne
+            SimpleTimer.timerType = TimerType.AdvancedTwo
             saveExerciseName()
             startActivity(timerStartActivity)
         }
 
-        numberPickerExercisesAdvOne.setOnValueChangedListener{ picker, oldVal, newVal ->
+        numberPickerExercisesAdvTwo.setOnValueChangedListener{ picker, oldVal, newVal ->
             updateExercisePickers(newVal, false)
         }
     }
 
     private fun initNumberPickers(){
-        numberPickerRoundsAdvOne.minValue = 1
-        numberPickerRoundsAdvOne.maxValue = 99
-        numberPickerExercisesAdvOne.minValue = 1
-        numberPickerExercisesAdvOne.maxValue = 20
-        numberPickerBreakMinutesAdvOne.minValue = 0
-        numberPickerBreakMinutesAdvOne.maxValue = 60
-        numberPickerBreakSecondsAdvOne.minValue = 0
-        numberPickerBreakSecondsAdvOne.maxValue = 59
+        numberPickerRoundsAdvTwo.minValue = 1
+        numberPickerRoundsAdvTwo.maxValue = 99
+        numberPickerRoundsAdvTwo.value = 1
+        numberPickerExercisesAdvTwo.minValue = 1
+        numberPickerExercisesAdvTwo.maxValue = 20
+        numberPickerExercisesAdvTwo.value = 1
+        numberPickerBreakMinutesAdvTwo.minValue = 0
+        numberPickerBreakMinutesAdvTwo.maxValue = 60
+        numberPickerBreakSecondsAdvTwo.minValue = 0
+        numberPickerBreakSecondsAdvTwo.maxValue = 59
     }
 
     private fun updateExercisePickers(pickerNumb : Int, isReadingDataFile: Boolean) {
         removeOldExercisePickers()
-        numberPickerExercisesAdvOne.value = pickerNumb
+        numberPickerExercisesAdvTwo.value = pickerNumb
         for(i in 1..pickerNumb) {
             val dynamicText = initDynamicText(i)
             val dynamicHorLayout = LinearLayout(ContextThemeWrapper(this, R.style.DynamicLinearLayoutTheme))
@@ -159,11 +164,11 @@ class AdvancedOneActivity : AppCompatActivity() {
      */
     @ExperimentalStdlibApi
     private fun readFromList() : Boolean {
-        if(readDataFromFile(this, DATA_FILE_NAME_ADV_ONE)) {
+        if(readDataFromFile(this, DATA_FILE_NAME_ADV_TWO)) {
 
-            numberPickerRoundsAdvOne.value = SimpleTimer.quickTimer.rounds!!
-            numberPickerBreakMinutesAdvOne.value = SimpleTimer.quickTimer.restMin!!
-            numberPickerBreakSecondsAdvOne.value = SimpleTimer.quickTimer.restSec!!
+            numberPickerRoundsAdvTwo.value = SimpleTimer.quickTimer.rounds!!
+            numberPickerBreakMinutesAdvTwo.value = SimpleTimer.quickTimer.restMin!!
+            numberPickerBreakSecondsAdvTwo.value = SimpleTimer.quickTimer.restSec!!
             when(SimpleTimer.quickTimer.isRestAfterRound){
                 true -> radioButtonAfterRound.isChecked = true
                 false -> radioButtonAfterExercise.isChecked = true
@@ -176,18 +181,18 @@ class AdvancedOneActivity : AppCompatActivity() {
     }
 
     private fun readExerciseName(){
-        if (PrefUtil.getAdvancedExerciseOneName(this).length <= 0){
-            nameRoundsAdvOne.text?.append("You custom exercise")
+        if (PrefUtil.getAdvancedExerciseTwoName(this).length <= 0){
+            nameRoundsAdvTwo.text?.append("You custom exercise")
         } else {
-            nameRoundsAdvOne.text?.append(PrefUtil.getAdvancedExerciseOneName(this))
+            nameRoundsAdvTwo.text?.append(PrefUtil.getAdvancedExerciseTwoName(this))
         }
     }
 
     private fun saveExerciseName() {
-        if(nameRoundsAdvOne.text == null){
-            PrefUtil.setAdvancedExerciseOneName(this, "Your custom exercise")
+        if(nameRoundsAdvTwo.text == null){
+            PrefUtil.setAdvancedExerciseTwoName(this, "Your custom exercise")
         } else {
-            PrefUtil.setAdvancedExerciseOneName(this, nameRoundsAdvOne.text.toString())
+            PrefUtil.setAdvancedExerciseTwoName(this, nameRoundsAdvTwo.text.toString())
         }
     }
 
